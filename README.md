@@ -67,7 +67,7 @@ for ( var i = 0; i < streams.length; i++ ) {
 	for ( var j = 0; j < 100; j++ ) {
 		str += String.fromCharCode(97 + Math.floor(Math.random() * 26));
 	}
-	streams[ i ] = factory( data );
+	streams[ i ] = factory( str );
 }
 ```
 
