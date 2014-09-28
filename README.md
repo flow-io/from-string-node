@@ -2,7 +2,7 @@ from-string
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Converts a string to a readable stream.
+> Converts a string to a [readable stream](http://nodejs.org/api/stream.html#stream_class_stream_readable).
 
 
 ## Installation
@@ -16,33 +16,91 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 
 ## Usage
 
+To use the module,
 
+``` javascript
+var fromString = require( 'flow-from-string' );
+```
+
+#### fromString( str[, options] )
+
+Returns a readable `stream` where each emitted datum is a character from the input `string`.
+
+To convert a `string` to a readable stream,
+
+``` javascript
+var stream = fromString( 'beep' );
+```
+
+To set the readable stream `options`,
+
+``` javascript
+var opts = {
+		'objectMode': true,
+		'encoding': 'utf8',
+		'highWaterMark': 8
+	};
+
+stream = fromString( 'beep', opts );
+```
+
+
+#### fromString.factory( [options] )
+
+Returns a reusable stream factory. The factory method ensures streams are configured identically by using the same set of provided `options`.
+
+``` javascript
+var opts = {
+		'objectMode': true,
+		'encoding': 'utf8',
+		'highWaterMark': 8
+	};
+
+var factory = fromString.factory( opts );
+
+var streams = new Array( 10 ),
+	str;
+
+// Create many streams configured identically but reading different strings...
+for ( var i = 0; i < streams.length; i++ ) {
+	str = '';
+	for ( var j = 0; j < 100; j++ ) {
+		str += String.fromCharCode(97 + Math.floor(Math.random() * 26));
+	}
+	streams[ i ] = factory( data );
+}
+```
+
+
+#### fromString.objectMode( str[, options] )
+
+This method is a convenience function to create readable streams which always operate in `objectMode`. The method will __always__ override the `objectMode` option in `options`.
+
+``` javascript
+var fromString = require( 'flow-from-string' ).objectMode;
+
+fromString( 'beep' )
+	.pipe( process.stdout );
+```
 
 
 ## Examples
 
 ``` javascript
-var toString = require( 'flow-to-string' ),
-	append = require( 'flow-append' ).objectMode,
-	readArray = require( 'flow-read-array' ),
-	flowStream = require( 'flow-from-string' );
+var append = require( 'flow-append' ).objectMode,
+	fromString = require( 'flow-from-string' );
 
-// Create some data...
-var data = new Array( 1000 );
-for ( var i = 0; i < data.length; i++ ) {
-	data[ i ] = Math.random();
+// Create a string...
+var str = '';
+for ( var i = 0; i < 200; i++ ) {
+	str += String.fromCharCode(97 + Math.floor(Math.random() * 26));
 }
 
 // Create a readable stream:
-var readStream = readArray( data );
-
-// Create a new flow stream:
-var stream = flowStream();
+var readableStream = fromString( str );
 
 // Pipe the data:
-readStream
-	.pipe( stream )
-	.pipe( toString() )
+readableStream
 	.pipe( append( '\n' ) )
 	.pipe( process.stdout );
 ```
