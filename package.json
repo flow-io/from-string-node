@@ -42,6 +42,7 @@
   "devDependencies": {
     "chai": "1.x.x",
     "coveralls": "^2.11.1",
+    "flow-append": "^1.0.1",
     "flow-mock-read": "^1.0.0",
     "istanbul": "^0.3.0",
     "mocha": "1.x.x"
