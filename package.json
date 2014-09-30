@@ -1,6 +1,6 @@
 {
   "name": "flow-from-string",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts a string to a readable stream.",
   "author": {
     "name": "Athan Reines",
